@@ -5,7 +5,9 @@ async function getCoordinates(cep) {
         if (data.erro) {
             throw new Error('CEP inválido');
         }
+        console.log(data);
         const address = `${data.logradouro}, ${data.bairro}, ${data.localidade}, ${data.uf}`;
+        console.log(address);
         const geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${address}`);
         const geoData = await geoResponse.json();
         if (geoData.length === 0) {
@@ -44,7 +46,13 @@ function calculateDistance() {
             resultElement.style.color = '#335f6f'; // Restaura a cor do texto do resultado
             if (coord1 && coord2) {
                 const distance = getDistance(coord1.lat, coord1.lon, coord2.lat, coord2.lon);
-                resultElement.innerHTML =resultElement.innerHTML+`<p>A distância entre os CEPs é ${distance.toFixed(2)} km<p>`;
+                resultElement.innerHTML = `
+                    <div id="loading" style="visibility: hidden">
+                        <div class="spinner"></div>
+                    </div>
+                    <p>A distância entre os CEPs é ${distance.toFixed(2)} km</p>
+                `;
+
             }
         });
 }
